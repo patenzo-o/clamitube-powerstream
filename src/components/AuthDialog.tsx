@@ -42,7 +42,7 @@ export function AuthDialog({ open, onOpenChange, onSignIn }: AuthDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md gradient-card border-0 shadow-glow">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto gradient-card border-0 shadow-glow">
         <DialogHeader className="text-center">
           <div className="flex justify-center mb-4">
             <Logo size="sm" />
@@ -136,15 +136,15 @@ export function AuthDialog({ open, onOpenChange, onSignIn }: AuthDialogProps) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-card">
-                    <SelectItem value="visitor">Visitor</SelectItem>
+                    <SelectItem value="visitor">Visitor (Only Viewer Mode)</SelectItem>
                     <SelectItem value="student">Student</SelectItem>
-                    <SelectItem value="teacher" className="border-2 border-amber-400 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/20 dark:to-yellow-950/20 shadow-md">
+                    <SelectItem value="teacher" className="bg-gradient-to-r from-amber-100 via-yellow-100 to-amber-100 dark:from-amber-900/40 dark:via-yellow-900/40 dark:to-amber-900/40 border-2 border-amber-400 shadow-lg ring-2 ring-amber-300/50">
                       Teacher (Exclusive)
                     </SelectItem>
-                    <SelectItem value="admin" className="border-2 border-amber-400 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/20 dark:to-yellow-950/20 shadow-md">
+                    <SelectItem value="admin" className="bg-gradient-to-r from-amber-100 via-yellow-100 to-amber-100 dark:from-amber-900/40 dark:via-yellow-900/40 dark:to-amber-900/40 border-2 border-amber-400 shadow-lg ring-2 ring-amber-300/50">
                       Admin (Exclusive)
                     </SelectItem>
-                    <SelectItem value="owner" className="border-2 border-amber-400 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/20 dark:to-yellow-950/20 shadow-md">
+                    <SelectItem value="owner" className="bg-gradient-to-r from-amber-100 via-yellow-100 to-amber-100 dark:from-amber-900/40 dark:via-yellow-900/40 dark:to-amber-900/40 border-2 border-amber-400 shadow-lg ring-2 ring-amber-300/50">
                       Owner (Exclusive)
                     </SelectItem>
                   </SelectContent>
