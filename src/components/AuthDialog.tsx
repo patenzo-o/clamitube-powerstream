@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Logo } from "@/components/ui/logo";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Chrome, BookOpen, Zap, Figma, Code, Palette, Headphones } from "lucide-react";
 
 interface AuthDialogProps {
   open: boolean;
@@ -25,13 +25,13 @@ export function AuthDialog({ open, onOpenChange, onSignIn }: AuthDialogProps) {
   const [agreeReady, setAgreeReady] = useState(false);
 
   const signInProviders = [
-    { name: "Google", color: "bg-red-500 hover:bg-red-600" },
-    { name: "Learnful", color: "bg-blue-500 hover:bg-blue-600" },
-    { name: "Bolt", color: "bg-yellow-500 hover:bg-yellow-600" },
-    { name: "Figma", color: "bg-purple-500 hover:bg-purple-600" },
-    { name: "Replit", color: "bg-green-500 hover:bg-green-600" },
-    { name: "Powerstream Studios", color: "bg-orange-500 hover:bg-orange-600" },
-    { name: "Hendrix", color: "bg-indigo-500 hover:bg-indigo-600" },
+    { name: "Google", color: "bg-red-500 hover:bg-red-600", icon: Chrome },
+    { name: "Learnful", color: "bg-blue-500 hover:bg-blue-600", icon: BookOpen },
+    { name: "Bolt", color: "bg-yellow-500 hover:bg-yellow-600", icon: Zap },
+    { name: "Figma", color: "bg-purple-500 hover:bg-purple-600", icon: Figma },
+    { name: "Replit", color: "bg-green-500 hover:bg-green-600", icon: Code },
+    { name: "Powerstream Studios", color: "bg-orange-500 hover:bg-orange-600", icon: Palette },
+    { name: "Hendrix", color: "bg-indigo-500 hover:bg-indigo-600", icon: Headphones },
   ];
 
   const handleSubmit = () => {
@@ -55,16 +55,20 @@ export function AuthDialog({ open, onOpenChange, onSignIn }: AuthDialogProps) {
         <div className="space-y-4">
           {/* OAuth Providers */}
           <div className="grid grid-cols-2 gap-2">
-            {signInProviders.map((provider) => (
-              <Button
-                key={provider.name}
-                variant="outline"
-                size="sm"
-                className={`${provider.color} text-white border-0 hover:shadow-hover transition-smooth`}
-              >
-                {provider.name}
-              </Button>
-            ))}
+            {signInProviders.map((provider) => {
+              const IconComponent = provider.icon;
+              return (
+                <Button
+                  key={provider.name}
+                  variant="outline"
+                  size="sm"
+                  className={`${provider.color} text-white border-0 hover:shadow-hover transition-smooth flex items-center gap-2`}
+                >
+                  <IconComponent className="h-4 w-4" />
+                  {provider.name}
+                </Button>
+              );
+            })}
           </div>
 
           <div className="relative">
