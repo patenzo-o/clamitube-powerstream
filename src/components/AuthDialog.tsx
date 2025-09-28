@@ -138,13 +138,13 @@ export function AuthDialog({ open, onOpenChange, onSignIn }: AuthDialogProps) {
                   <SelectContent className="bg-card">
                     <SelectItem value="visitor">Visitor</SelectItem>
                     <SelectItem value="student">Student</SelectItem>
-                    <SelectItem value="teacher" className="border-2 border-yellow-400 bg-yellow-50 dark:bg-yellow-950/20">
+                    <SelectItem value="teacher" className="border-2 border-amber-400 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/20 dark:to-yellow-950/20 shadow-md">
                       Teacher (Exclusive)
                     </SelectItem>
-                    <SelectItem value="admin" className="border-2 border-yellow-400 bg-yellow-50 dark:bg-yellow-950/20">
+                    <SelectItem value="admin" className="border-2 border-amber-400 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/20 dark:to-yellow-950/20 shadow-md">
                       Admin (Exclusive)
                     </SelectItem>
-                    <SelectItem value="owner" className="border-2 border-yellow-400 bg-yellow-50 dark:bg-yellow-950/20">
+                    <SelectItem value="owner" className="border-2 border-amber-400 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/20 dark:to-yellow-950/20 shadow-md">
                       Owner (Exclusive)
                     </SelectItem>
                   </SelectContent>
