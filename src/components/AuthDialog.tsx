@@ -138,9 +138,15 @@ export function AuthDialog({ open, onOpenChange, onSignIn }: AuthDialogProps) {
                   <SelectContent className="bg-card">
                     <SelectItem value="visitor">Visitor</SelectItem>
                     <SelectItem value="student">Student</SelectItem>
-                    <SelectItem value="teacher" disabled>Teacher (Exclusive)</SelectItem>
-                    <SelectItem value="admin" disabled>Admin (Exclusive)</SelectItem>
-                    <SelectItem value="owner" disabled>Owner (Exclusive)</SelectItem>
+                    <SelectItem value="teacher" className="border-2 border-yellow-400 bg-yellow-50 dark:bg-yellow-950/20">
+                      Teacher (Exclusive)
+                    </SelectItem>
+                    <SelectItem value="admin" className="border-2 border-yellow-400 bg-yellow-50 dark:bg-yellow-950/20">
+                      Admin (Exclusive)
+                    </SelectItem>
+                    <SelectItem value="owner" className="border-2 border-yellow-400 bg-yellow-50 dark:bg-yellow-950/20">
+                      Owner (Exclusive)
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
