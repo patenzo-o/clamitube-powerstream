@@ -14,7 +14,216 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      content: {
+        Row: {
+          ai_prompt: string | null
+          content_type: Database["public"]["Enums"]["content_type"]
+          created_at: string
+          creator_id: string
+          date_created: string | null
+          description: string | null
+          id: string
+          is_published: boolean | null
+          tags: string[] | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          video_url: string | null
+          year: number | null
+        }
+        Insert: {
+          ai_prompt?: string | null
+          content_type: Database["public"]["Enums"]["content_type"]
+          created_at?: string
+          creator_id: string
+          date_created?: string | null
+          description?: string | null
+          id?: string
+          is_published?: boolean | null
+          tags?: string[] | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+          video_url?: string | null
+          year?: number | null
+        }
+        Update: {
+          ai_prompt?: string | null
+          content_type?: Database["public"]["Enums"]["content_type"]
+          created_at?: string
+          creator_id?: string
+          date_created?: string | null
+          description?: string | null
+          id?: string
+          is_published?: boolean | null
+          tags?: string[] | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          video_url?: string | null
+          year?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      lessons: {
+        Row: {
+          content_id: string
+          created_at: string
+          description: string | null
+          id: string
+          materials: Json | null
+          order_index: number
+          title: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          content_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          materials?: Json | null
+          order_index: number
+          title: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          content_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          materials?: Json | null
+          order_index?: number
+          title?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lessons_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          claions: number
+          created_at: string
+          display_name: string | null
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          claions?: number
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          claions?: number
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      purchases: {
+        Row: {
+          cost: number
+          id: string
+          new_role: Database["public"]["Enums"]["user_role"]
+          processed_at: string
+          product_name: string
+          user_id: string
+        }
+        Insert: {
+          cost: number
+          id?: string
+          new_role: Database["public"]["Enums"]["user_role"]
+          processed_at?: string
+          product_name: string
+          user_id: string
+        }
+        Update: {
+          cost?: number
+          id?: string
+          new_role?: Database["public"]["Enums"]["user_role"]
+          processed_at?: string
+          product_name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchases_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      user_permissions: {
+        Row: {
+          created_at: string
+          granted_by: string | null
+          id: string
+          is_allowed: boolean
+          permission_type: Database["public"]["Enums"]["permission_type"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          granted_by?: string | null
+          id?: string
+          is_allowed?: boolean
+          permission_type: Database["public"]["Enums"]["permission_type"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          granted_by?: string | null
+          id?: string
+          is_allowed?: boolean
+          permission_type?: Database["public"]["Enums"]["permission_type"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_permissions_granted_by_fkey"
+            columns: ["granted_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_permissions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +232,13 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      content_type: "video" | "lesson" | "course"
+      permission_type:
+        | "create_content"
+        | "edit_content"
+        | "delete_content"
+        | "manage_users"
+      user_role: "visitor" | "student" | "teacher" | "admin" | "owner"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +365,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      content_type: ["video", "lesson", "course"],
+      permission_type: [
+        "create_content",
+        "edit_content",
+        "delete_content",
+        "manage_users",
+      ],
+      user_role: ["visitor", "student", "teacher", "admin", "owner"],
+    },
   },
 } as const
