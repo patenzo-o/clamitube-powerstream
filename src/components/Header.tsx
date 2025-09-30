@@ -1,72 +1,119 @@
 import { useState } from "react";
-import { Search, Settings, User, LogOut, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Logo } from "@/components/ui/logo";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { AuthDialog } from "./AuthDialog";
+import { SettingsDialog } from "./SettingsDialog";
+import { CreateContentDialog } from "./CreateContentDialog";
+import { AdminPanel } from "./AdminPanel";
+import { Logo } from "./ui/logo";
+import { useAuth } from "@/hooks/useAuth";
+import { Plus, Settings, Shield, LogOut, Crown } from "lucide-react";
 
-interface HeaderProps {
-  onSignInClick: () => void;
-  onSettingsClick: () => void;
-  isLoggedIn?: boolean;
-  userRole?: string;
-}
+export const Header = () => {
+  const { user, profile, signOut, canCreateContent } = useAuth();
+  const [authOpen, setAuthOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [createContentOpen, setCreateContentOpen] = useState(false);
+  const [adminPanelOpen, setAdminPanelOpen] = useState(false);
 
-export function Header({ onSignInClick, onSettingsClick, isLoggedIn = false, userRole = "Visitor" }: HeaderProps) {
-  const [searchQuery, setSearchQuery] = useState("");
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
+  const getRoleIcon = () => {
+    switch (profile?.role) {
+      case 'owner': return <Crown className="h-4 w-4 text-amber-500" />;
+      case 'admin': return <Shield className="h-4 w-4 text-purple-500" />;
+      default: return null;
+    }
+  };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80 shadow-card">
-      <div className="container flex h-16 items-center justify-between px-4">
-        <Logo />
+    <header className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 items-center justify-between">
+        <Logo size="sm" />
         
-        <div className="flex-1 max-w-2xl mx-8">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search educational videos..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-muted/50 border-0 focus:bg-background transition-smooth"
-            />
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {isLoggedIn ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  <span className="hidden sm:inline">{userRole}</span>
+        <div className="flex items-center gap-2">
+          {user && profile ? (
+            <>
+              {/* Create Content Button - Only for Owner, Teacher, Admin */}
+              {canCreateContent() && (
+                <Button
+                  onClick={() => setCreateContentOpen(true)}
+                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+                  size="sm"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  {profile.role}
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 bg-card">
-                <DropdownMenuItem onClick={onSettingsClick}>
-                  <Settings className="h-4 w-4 mr-2" />
-                  Settings
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-destructive">
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              )}
+
+              {/* Settings Button */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setSettingsOpen(true)}
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
+
+              {/* Admin Panel Button - All roles except Owner */}
+              {profile.role !== 'owner' && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setAdminPanelOpen(true)}
+                  className="flex items-center gap-2"
+                >
+                  <Shield className="h-4 w-4" />
+                  Admin Panel
+                </Button>
+              )}
+
+              {/* Owner Controls - Only for Owner */}
+              {profile.role === 'owner' && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setAdminPanelOpen(true)}
+                  className="flex items-center gap-2 border-amber-200 text-amber-700 hover:bg-amber-50"
+                >
+                  {getRoleIcon()}
+                  Owner Controls
+                </Button>
+              )}
+
+              {/* User Info & Sign Out */}
+              <div className="flex items-center gap-2 text-sm">
+                <span className="font-medium">{profile.display_name}</span>
+                <span className="text-muted-foreground">•</span>
+                <span className="text-muted-foreground">{profile.claions.toLocaleString()} Claions</span>
+              </div>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSignOut}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </>
           ) : (
-            <Button onClick={onSignInClick} className="bg-primary hover:bg-primary/90">
-              <LogIn className="h-4 w-4 mr-2" />
+            <Button onClick={() => setAuthOpen(true)}>
               Sign In
             </Button>
           )}
         </div>
       </div>
+      
+      <AuthDialog open={authOpen} onOpenChange={setAuthOpen} onSignIn={() => {}} />
+      <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+      <CreateContentDialog open={createContentOpen} onOpenChange={setCreateContentOpen} />
+      <AdminPanel open={adminPanelOpen} onOpenChange={setAdminPanelOpen} />
     </header>
   );
-}
+};

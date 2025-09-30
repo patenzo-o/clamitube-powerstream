@@ -1,1 +1,7 @@
 project_id = "demgqltbpdzhhlnhftjn"
+
+[functions.generate-content]
+verify_jwt = true
+
+[functions.purchase-role]
+verify_jwt = true

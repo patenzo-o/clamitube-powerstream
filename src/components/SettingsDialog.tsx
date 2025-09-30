@@ -3,175 +3,131 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Moon, Sun, User, Mail, Key, Globe, LogOut } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { Settings, Crown, Shield, User, GraduationCap } from "lucide-react";
 
 interface SettingsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
-  const [darkMode, setDarkMode] = useState(false);
-  const [language, setLanguage] = useState("english-us");
-  const [name, setName] = useState("Student User");
-  const [email, setEmail] = useState("student@example.com");
-  const [password, setPassword] = useState("");
+export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
+  const { profile, refreshProfile } = useAuth();
+  const { toast } = useToast();
+  const [displayName, setDisplayName] = useState(profile?.display_name || "");
+  const [loading, setLoading] = useState(false);
 
-  const languages = [
-    { value: "english-us", label: "English (US)" },
-    { value: "english-uk", label: "English (UK)" },
-    { value: "russian", label: "Russian" },
-    { value: "chinese-simplified", label: "Chinese (Simplified)" },
-    { value: "chinese-traditional", label: "Chinese (Traditional)" },
-    { value: "indian", label: "Indian" },
-    { value: "australian", label: "Australian" },
-    { value: "arabic", label: "Arabic" },
-    { value: "greek", label: "Greek" },
-    { value: "french", label: "French" },
-    { value: "german", label: "German" },
-    { value: "espanol", label: "Español" },
-  ];
+  const updateProfile = async () => {
+    if (!profile) return;
+    
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ display_name: displayName })
+        .eq('user_id', profile.user_id);
+
+      if (error) throw error;
+
+      refreshProfile();
+      toast({
+        title: "Profile updated",
+        description: "Your display name has been updated successfully.",
+      });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update profile.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getRoleIcon = (role: string) => {
+    switch (role) {
+      case 'owner': return <Crown className="h-4 w-4 text-amber-500" />;
+      case 'admin': return <Shield className="h-4 w-4 text-purple-500" />;
+      case 'teacher': return <GraduationCap className="h-4 w-4 text-blue-500" />;
+      case 'student': return <User className="h-4 w-4 text-green-500" />;
+      default: return <User className="h-4 w-4 text-gray-500" />;
+    }
+  };
+
+  if (!profile) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl gradient-card border-0 shadow-glow max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2">
+            <Settings className="h-5 w-5" />
             Settings
           </DialogTitle>
         </DialogHeader>
-
+        
         <div className="space-y-6">
-          {/* Appearance Settings */}
-          <Card className="gradient-card border border-border/50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                {darkMode ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-                Appearance
-              </CardTitle>
-              <CardDescription>Customize how Clamastream looks</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="dark-mode">Dark Mode</Label>
-                  <p className="text-sm text-muted-foreground">Switch between light and dark themes</p>
-                </div>
-                <Switch
-                  id="dark-mode"
-                  checked={darkMode}
-                  onCheckedChange={setDarkMode}
-                />
-              </div>
-            </CardContent>
-          </Card>
+          {/* Profile Section */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium">Profile Information</h3>
+            
+            <div className="space-y-2">
+              <Label htmlFor="displayName">Display Name</Label>
+              <Input
+                id="displayName"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                placeholder="Enter your display name"
+              />
+            </div>
+            
+            <Button onClick={updateProfile} disabled={loading} className="w-full">
+              {loading ? "Updating..." : "Update Profile"}
+            </Button>
+          </div>
 
-          {/* Language Settings */}
-          <Card className="gradient-card border border-border/50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Globe className="h-5 w-5" />
-                Language & Region
-              </CardTitle>
-              <CardDescription>Choose your preferred language</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div>
-                <Label htmlFor="language">Language</Label>
-                <Select value={language} onValueChange={setLanguage}>
-                  <SelectTrigger className="bg-muted/50 border-0 mt-2">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-card">
-                    {languages.map((lang) => (
-                      <SelectItem key={lang.value} value={lang.value}>
-                        {lang.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </CardContent>
-          </Card>
+          <Separator />
 
-          {/* Account Management */}
-          <Card className="gradient-card border border-border/50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="h-5 w-5" />
-                Account Management
-              </CardTitle>
-              <CardDescription>Update your account information</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label htmlFor="name">Full Name</Label>
-                <Input
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="bg-muted/50 border-0 mt-2"
-                />
+          {/* Role & Currency Section */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium">Account Status</h3>
+            
+            <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+              <div className="flex items-center gap-2">
+                {getRoleIcon(profile.role)}
+                <span className="font-medium capitalize">{profile.role}</span>
               </div>
-              
-              <div>
-                <Label htmlFor="email">Email Address</Label>
-                <div className="relative mt-2">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="bg-muted/50 border-0 pl-10"
-                  />
-                </div>
+              <div className="text-sm text-muted-foreground">Current Role</div>
+            </div>
+            
+            <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">🪙</span>
+                <span className="font-medium">{profile.claions.toLocaleString()}</span>
               </div>
+              <div className="text-sm text-muted-foreground">Claions</div>
+            </div>
+          </div>
 
-              <div>
-                <Label htmlFor="password">New Password</Label>
-                <div className="relative mt-2">
-                  <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Leave blank to keep current password"
-                    className="bg-muted/50 border-0 pl-10"
-                  />
-                </div>
-              </div>
-
-              <Button className="w-full bg-primary hover:bg-primary/90">
-                Update Account
+          {/* Quick Actions */}
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium">Quick Actions</h3>
+            <div className="grid grid-cols-2 gap-2">
+              <Button variant="outline" size="sm" onClick={() => refreshProfile()}>
+                Refresh Data
               </Button>
-            </CardContent>
-          </Card>
-
-          {/* Account Actions */}
-          <Card className="gradient-card border border-border/50">
-            <CardHeader>
-              <CardTitle>Account Actions</CardTitle>
-              <CardDescription>Sign out or manage your session</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button 
-                variant="destructive" 
-                className="w-full"
-                onClick={() => onOpenChange(false)}
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Sign Out
+              <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
+                Close
               </Button>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
   );
-}
+};
