@@ -1,5 +1,7 @@
 import { Header } from "@/components/Header";
 import { VideoCard } from "@/components/VideoCard";
+import { SearchBar } from "@/components/SearchBar";
+import { FiltersSection } from "@/components/FiltersSection";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -7,6 +9,8 @@ import { useAuth } from "@/hooks/useAuth";
 const Index = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (!loading && !user) {
@@ -76,6 +80,8 @@ const Index = () => {
           </p>
         </div>
 
+        <SearchBar onSearch={setSearchQuery} />
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {videoData.map((video, index) => (
             <VideoCard
@@ -89,6 +95,10 @@ const Index = () => {
           ))}
         </div>
       </main>
+
+      <FiltersSection 
+        onFilterChange={(type, value) => setFilters({...filters, [type]: value})} 
+      />
     </div>
   );
 };
