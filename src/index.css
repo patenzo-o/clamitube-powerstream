@@ -9,7 +9,7 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Educational gradient theme */
-    --background: 220 30% 97%;
+    --background: 0 0% 100%;
     --foreground: 230 15% 15%;
 
     --card: 0 0% 100%;
@@ -117,9 +117,10 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--gradient-main);
+    background: linear-gradient(135deg, hsl(120 80% 50%), hsl(195 85% 55%), hsl(250 85% 60%));
+    background-attachment: fixed;
     min-height: 100vh;
   }
 }
