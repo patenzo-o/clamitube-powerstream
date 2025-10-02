@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Trophy, BookOpen, Video, Eye, Users, Tag } from "lucide-react";
+import { Trophy, BookOpen, Video, Eye, Users, Tag, MonitorPlay, GraduationCap } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +16,8 @@ export const FiltersSection = ({ onFilterChange }: FiltersSectionProps) => {
   const types = ["Video Lessons", "Interactive Courses", "Documentaries", "Tutorials"];
   const viewRanges = ["0-1K", "1K-10K", "10K-100K", "100K+"];
   const channels = ["Educational Content", "Science Channel", "Math Academy", "History Hub"];
+  const qualities = ["4K", "1080p", "720p", "480p", "360p"];
+  const subjects = ["Algebra", "Physics", "Chemistry", "Biology", "World History", "Literature", "Programming", "Art"];
 
   return (
     <div className="w-full bg-card/50 backdrop-blur-sm border-t border-b py-6 my-8">
@@ -110,6 +112,44 @@ export const FiltersSection = ({ onFilterChange }: FiltersSectionProps) => {
             <Tag size={18} />
             Tag Search
           </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                <MonitorPlay size={18} />
+                Quality
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="bg-background z-50">
+              {qualities.map((quality) => (
+                <DropdownMenuItem
+                  key={quality}
+                  onClick={() => onFilterChange("quality", quality)}
+                >
+                  {quality}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                <GraduationCap size={18} />
+                Subject
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="bg-background z-50">
+              {subjects.map((subject) => (
+                <DropdownMenuItem
+                  key={subject}
+                  onClick={() => onFilterChange("subject", subject)}
+                >
+                  {subject}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>
