@@ -4,9 +4,11 @@ import { AuthDialog } from "./AuthDialog";
 import { SettingsDialog } from "./SettingsDialog";
 import { CreateContentDialog } from "./CreateContentDialog";
 import { AdminPanel } from "./AdminPanel";
+import { ShopDialog } from "./ShopDialog";
+import { NotificationsDropdown } from "./NotificationsDropdown";
 import { Logo } from "./ui/logo";
 import { useAuth } from "@/hooks/useAuth";
-import { Plus, Settings, Shield, LogOut, Crown, Bell, Coins } from "lucide-react";
+import { Plus, Settings, Shield, LogOut, Crown, ShoppingCart, Coins } from "lucide-react";
 
 export const Header = () => {
   const { user, profile, signOut, canCreateContent } = useAuth();
@@ -14,6 +16,7 @@ export const Header = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [createContentOpen, setCreateContentOpen] = useState(false);
   const [adminPanelOpen, setAdminPanelOpen] = useState(false);
+  const [shopOpen, setShopOpen] = useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -51,14 +54,18 @@ export const Header = () => {
                 </Button>
               )}
 
-              {/* Notifications Button */}
+              {/* Notifications Dropdown */}
+              <NotificationsDropdown />
+
+              {/* Shop Button */}
               <Button
                 variant="outline"
                 size="sm"
-                className="relative"
+                onClick={() => setShopOpen(true)}
+                className="flex items-center gap-2"
               >
-                <Bell className="h-4 w-4" />
-                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-[10px] text-white flex items-center justify-center">3</span>
+                <ShoppingCart className="h-4 w-4" />
+                Shop
               </Button>
 
               {/* Settings Button */}
@@ -129,6 +136,7 @@ export const Header = () => {
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
       <CreateContentDialog open={createContentOpen} onOpenChange={setCreateContentOpen} />
       <AdminPanel open={adminPanelOpen} onOpenChange={setAdminPanelOpen} />
+      <ShopDialog open={shopOpen} onOpenChange={setShopOpen} />
     </header>
   );
 };
