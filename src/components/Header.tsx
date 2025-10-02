@@ -6,6 +6,8 @@ import { CreateContentDialog } from "./CreateContentDialog";
 import { AdminPanel } from "./AdminPanel";
 import { ShopDialog } from "./ShopDialog";
 import { NotificationsDropdown } from "./NotificationsDropdown";
+import { SubscriptionsDialog } from "./SubscriptionsDialog";
+import { ShortsButton } from "./ShortsButton";
 import { Logo } from "./ui/logo";
 import { useAuth } from "@/hooks/useAuth";
 import { Plus, Settings, Shield, LogOut, Crown, ShoppingCart, Coins } from "lucide-react";
@@ -56,6 +58,12 @@ export const Header = () => {
 
               {/* Notifications Dropdown */}
               <NotificationsDropdown />
+
+              {/* Subscriptions */}
+              <SubscriptionsDialog />
+
+              {/* Shorts */}
+              <ShortsButton />
 
               {/* Shop Button */}
               <Button

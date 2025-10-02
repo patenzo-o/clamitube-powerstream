@@ -2,13 +2,16 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Calendar, User, ThumbsUp, ThumbsDown, Bell, Tag } from "lucide-react";
+import { Eye, Calendar, User, ThumbsUp, ThumbsDown, Bell, Tag, CheckCircle2, MessageSquare } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { VideoCardMenu } from "./VideoCardMenu";
+import { RatingSystem } from "./RatingSystem";
+import { CommentsSection } from "./CommentsSection";
 
 interface VideoCardProps {
   title: string;
@@ -22,6 +25,12 @@ interface VideoCardProps {
   isNew?: boolean;
   likes?: number;
   dislikes?: number;
+  isVerified?: boolean;
+  isMembersOnly?: boolean;
+  isSponsored?: boolean;
+  hasYouTubeFeature?: boolean;
+  videoId?: string;
+  commentsCount?: number;
 }
 
 export function VideoCard({ 
@@ -35,9 +44,16 @@ export function VideoCard({
   quality = "1080p",
   isNew = false,
   likes = 0,
-  dislikes = 0
+  dislikes = 0,
+  isVerified = false,
+  isMembersOnly = false,
+  isSponsored = false,
+  hasYouTubeFeature = false,
+  videoId = "1",
+  commentsCount = 0,
 }: VideoCardProps) {
   const [showTags, setShowTags] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
@@ -45,6 +61,7 @@ export function VideoCard({
   const [dislikeCount, setDislikeCount] = useState(dislikes);
 
   const handleLike = () => {
+    if (isSponsored) return; // Ads can't be liked
     if (liked) {
       setLiked(false);
       setLikeCount(likeCount - 1);
@@ -59,6 +76,7 @@ export function VideoCard({
   };
 
   const handleDislike = () => {
+    if (isSponsored) return; // Ads can't be disliked
     if (disliked) {
       setDisliked(false);
       setDislikeCount(dislikeCount - 1);
@@ -70,6 +88,11 @@ export function VideoCard({
         setLikeCount(likeCount - 1);
       }
     }
+  };
+
+  const handleSubscribe = () => {
+    if (isSponsored) return; // Can't subscribe to ads
+    setSubscribed(!subscribed);
   };
   return (
     <Card className="group gradient-card border-0 shadow-card hover:shadow-hover transition-smooth cursor-pointer overflow-hidden">
@@ -93,11 +116,28 @@ export function VideoCard({
             {quality}
           </div>
         </div>
-        {isNew && (
-          <div className="absolute top-2 left-2 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">
-            NEW
-          </div>
-        )}
+        <div className="absolute top-2 left-2 flex gap-2 flex-wrap">
+          {isNew && (
+            <Badge className="bg-red-600 text-white px-3 py-1 text-xs font-bold animate-pulse border-0">
+              NEW
+            </Badge>
+          )}
+          {isSponsored && (
+            <Badge className="bg-yellow-500 text-black px-3 py-1 text-xs font-bold border-0">
+              SPONSORED
+            </Badge>
+          )}
+          {isMembersOnly && (
+            <Badge className="bg-purple-600 text-white px-3 py-1 text-xs font-bold border-0">
+              MEMBERS ONLY
+            </Badge>
+          )}
+          {hasYouTubeFeature && (
+            <Badge className="bg-red-500 text-white px-3 py-1 text-xs font-bold border-0">
+              YOUTUBE
+            </Badge>
+          )}
+        </div>
       </div>
       
       <CardContent className="p-4">
@@ -108,6 +148,9 @@ export function VideoCard({
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
           <User className="h-4 w-4" />
           <span>{author}</span>
+          {isVerified && (
+            <CheckCircle2 className="h-4 w-4 text-blue-500 fill-blue-500" />
+          )}
         </div>
         
         <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
@@ -138,7 +181,11 @@ export function VideoCard({
           )}
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="mb-3">
+          <RatingSystem />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 mb-3">
           <Button
             variant="outline"
             size="sm"
@@ -149,37 +196,56 @@ export function VideoCard({
             See Tags
           </Button>
 
+          {!isSponsored && (
+            <Button
+              variant={subscribed ? "default" : "outline"}
+              size="sm"
+              onClick={handleSubscribe}
+              className="flex items-center gap-1"
+              disabled={isSponsored}
+            >
+              <Bell className="h-3 w-3" />
+              {subscribed ? "Subscribed" : "Subscribe"}
+            </Button>
+          )}
+
+          {!isSponsored && (
+            <div className="flex items-center gap-1">
+              <Button
+                variant={liked ? "default" : "outline"}
+                size="sm"
+                onClick={handleLike}
+                className="flex items-center gap-1"
+                disabled={isSponsored}
+              >
+                <ThumbsUp className="h-3 w-3" />
+                <span className="text-xs">{likeCount}</span>
+              </Button>
+
+              <Button
+                variant={disliked ? "default" : "outline"}
+                size="sm"
+                onClick={handleDislike}
+                className="flex items-center gap-1"
+                disabled={isSponsored}
+              >
+                <ThumbsDown className="h-3 w-3" />
+                <span className="text-xs">{dislikeCount}</span>
+              </Button>
+            </div>
+          )}
+
           <Button
-            variant={subscribed ? "default" : "outline"}
+            variant="outline"
             size="sm"
-            onClick={() => setSubscribed(!subscribed)}
+            onClick={() => setShowComments(true)}
             className="flex items-center gap-1"
           >
-            <Bell className="h-3 w-3" />
-            {subscribed ? "Subscribed" : "Subscribe"}
+            <MessageSquare className="h-3 w-3" />
+            <span className="text-xs">{commentsCount}</span>
           </Button>
 
-          <div className="flex items-center gap-1">
-            <Button
-              variant={liked ? "default" : "outline"}
-              size="sm"
-              onClick={handleLike}
-              className="flex items-center gap-1"
-            >
-              <ThumbsUp className="h-3 w-3" />
-              <span className="text-xs">{likeCount}</span>
-            </Button>
-
-            <Button
-              variant={disliked ? "default" : "outline"}
-              size="sm"
-              onClick={handleDislike}
-              className="flex items-center gap-1"
-            >
-              <ThumbsDown className="h-3 w-3" />
-              <span className="text-xs">{dislikeCount}</span>
-            </Button>
-          </div>
+          <VideoCardMenu />
         </div>
 
         <Dialog open={showTags} onOpenChange={setShowTags}>
@@ -198,6 +264,15 @@ export function VideoCard({
                 </Badge>
               ))}
             </div>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={showComments} onOpenChange={setShowComments}>
+          <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Comments</DialogTitle>
+            </DialogHeader>
+            <CommentsSection videoId={videoId} />
           </DialogContent>
         </Dialog>
       </CardContent>
