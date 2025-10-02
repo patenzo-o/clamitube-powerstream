@@ -66,7 +66,7 @@ export const Header = () => {
                 variant="outline"
                 size="sm"
                 onClick={() => setSettingsOpen(true)}
-                className="bg-muted text-muted-foreground hover:bg-muted/80"
+                className="bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-700"
               >
                 <Settings className="h-4 w-4" />
               </Button>
@@ -101,10 +101,11 @@ export const Header = () => {
               <div className="flex items-center gap-2 text-sm">
                 <span className="font-medium">{profile.display_name}</span>
                 <span className="text-muted-foreground">•</span>
-                <span className="text-muted-foreground flex items-center gap-1">
-                  <Coins className="h-4 w-4 text-amber-500" />
-                  {profile.claions.toLocaleString()} Claions
-                </span>
+                <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950 border border-amber-300 dark:border-amber-800">
+                  <Coins className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                  <span className="font-semibold text-amber-900 dark:text-amber-100">{profile.claions.toLocaleString()}</span>
+                  <span className="text-xs text-amber-700 dark:text-amber-300">₡</span>
+                </div>
               </div>
 
               <Button
