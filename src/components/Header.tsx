@@ -12,10 +12,12 @@ import { GenreSlider } from "./GenreSlider";
 import { ClamingesDialog } from "./ClamingesDialog";
 import { Logo } from "./ui/logo";
 import { useAuth } from "@/hooks/useAuth";
-import { Plus, Settings, Shield, LogOut, Crown, ShoppingCart, Coins, Image } from "lucide-react";
+import { Plus, Settings, Shield, LogOut, Crown, ShoppingCart, Coins, Image, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
   const { user, profile, signOut, canCreateContent } = useAuth();
+  const navigate = useNavigate();
   const [authOpen, setAuthOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [createContentOpen, setCreateContentOpen] = useState(false);
@@ -129,7 +131,15 @@ export const Header = () => {
 
               {/* User Info & Sign Out */}
               <div className="flex items-center gap-2 text-sm">
-                <span className="font-medium">{profile.display_name}</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate("/profile")}
+                  className="flex items-center gap-2"
+                >
+                  <User className="h-4 w-4" />
+                  <span className="font-medium">{profile.display_name}</span>
+                </Button>
                 <span className="text-muted-foreground">•</span>
                 <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950 border border-amber-300 dark:border-amber-800">
                   <Coins className="h-4 w-4 text-amber-600 dark:text-amber-400" />

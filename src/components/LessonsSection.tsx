@@ -1,6 +1,7 @@
 import { Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
 
 const lessonTopics = [
   "T.L.E",
@@ -22,6 +23,8 @@ interface LessonsSectionProps {
 }
 
 export function LessonsSection({ onTopicSelect }: LessonsSectionProps) {
+  const navigate = useNavigate();
+  
   return (
     <Card>
       <CardContent className="p-6">
@@ -34,7 +37,10 @@ export function LessonsSection({ onTopicSelect }: LessonsSectionProps) {
             <Button
               key={topic}
               variant="outline"
-              onClick={() => onTopicSelect(topic)}
+              onClick={() => {
+                onTopicSelect?.(topic);
+                navigate("/lessons");
+              }}
               className="h-auto py-4 flex flex-col items-center gap-2"
             >
               <Book className="h-5 w-5" />
