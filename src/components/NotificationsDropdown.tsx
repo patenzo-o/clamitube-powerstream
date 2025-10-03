@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 
 interface Notification {
   id: string;
@@ -37,10 +38,23 @@ const mockNotifications: Notification[] = [
     message: "Your subscription has been renewed",
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24),
   },
+  {
+    id: "4",
+    type: "upload",
+    message: "Teacher posted new assignment",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 48),
+  },
+  {
+    id: "5",
+    type: "event",
+    message: "Workshop scheduled for next week",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 8),
+  },
 ];
 
 export function NotificationsDropdown() {
   const [notifications] = useState<Notification[]>(mockNotifications);
+  const [notificationMode, setNotificationMode] = useState<"all" | "personalized" | "none" | "unsubscribe">("all");
 
   const filterByTime = (timeframe: "recent" | "past" | "old") => {
     const now = Date.now();
@@ -79,8 +93,33 @@ export function NotificationsDropdown() {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-80">
-        <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="w-96 bg-background z-50">
+        <DropdownMenuLabel className="flex items-center justify-between">
+          <span>Notifications</span>
+          <div className="flex gap-1">
+            <Badge
+              variant={notificationMode === "all" ? "default" : "outline"}
+              className="cursor-pointer text-xs"
+              onClick={() => setNotificationMode("all")}
+            >
+              All
+            </Badge>
+            <Badge
+              variant={notificationMode === "personalized" ? "default" : "outline"}
+              className="cursor-pointer text-xs"
+              onClick={() => setNotificationMode("personalized")}
+            >
+              Personalized
+            </Badge>
+            <Badge
+              variant={notificationMode === "none" ? "default" : "outline"}
+              className="cursor-pointer text-xs"
+              onClick={() => setNotificationMode("none")}
+            >
+              None
+            </Badge>
+          </div>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <Tabs defaultValue="recent" className="w-full">
           <TabsList className="grid w-full grid-cols-3">

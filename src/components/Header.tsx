@@ -8,9 +8,11 @@ import { ShopDialog } from "./ShopDialog";
 import { NotificationsDropdown } from "./NotificationsDropdown";
 import { SubscriptionsDialog } from "./SubscriptionsDialog";
 import { ShortsButton } from "./ShortsButton";
+import { GenreSlider } from "./GenreSlider";
+import { ClamingesDialog } from "./ClamingesDialog";
 import { Logo } from "./ui/logo";
 import { useAuth } from "@/hooks/useAuth";
-import { Plus, Settings, Shield, LogOut, Crown, ShoppingCart, Coins } from "lucide-react";
+import { Plus, Settings, Shield, LogOut, Crown, ShoppingCart, Coins, Image } from "lucide-react";
 
 export const Header = () => {
   const { user, profile, signOut, canCreateContent } = useAuth();
@@ -19,6 +21,7 @@ export const Header = () => {
   const [createContentOpen, setCreateContentOpen] = useState(false);
   const [adminPanelOpen, setAdminPanelOpen] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
+  const [clamingesOpen, setClamingesOpen] = useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -37,8 +40,9 @@ export const Header = () => {
   };
 
   return (
-    <header className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
+    <>
+      <header className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-16 items-center justify-between">
         <Logo size="sm" />
         
         <div className="flex items-center gap-2">
@@ -65,7 +69,7 @@ export const Header = () => {
               {/* Shorts */}
               <ShortsButton />
 
-              {/* Shop Button */}
+              {/* Shop Button - Clamatore */}
               <Button
                 variant="outline"
                 size="sm"
@@ -73,7 +77,18 @@ export const Header = () => {
                 className="flex items-center gap-2"
               >
                 <ShoppingCart className="h-4 w-4" />
-                Shop
+                Clamatore
+              </Button>
+
+              {/* Claminges Button */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setClamingesOpen(true)}
+                className="flex items-center gap-2"
+              >
+                <Image className="h-4 w-4" />
+                Claminges
               </Button>
 
               {/* Settings Button */}
@@ -140,11 +155,14 @@ export const Header = () => {
         </div>
       </div>
       
-      <AuthDialog open={authOpen} onOpenChange={setAuthOpen} onSignIn={() => {}} />
-      <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
-      <CreateContentDialog open={createContentOpen} onOpenChange={setCreateContentOpen} />
-      <AdminPanel open={adminPanelOpen} onOpenChange={setAdminPanelOpen} />
-      <ShopDialog open={shopOpen} onOpenChange={setShopOpen} />
-    </header>
+        <AuthDialog open={authOpen} onOpenChange={setAuthOpen} onSignIn={() => {}} />
+        <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+        <CreateContentDialog open={createContentOpen} onOpenChange={setCreateContentOpen} />
+        <AdminPanel open={adminPanelOpen} onOpenChange={setAdminPanelOpen} />
+        <ShopDialog open={shopOpen} onOpenChange={setShopOpen} />
+        <ClamingesDialog open={clamingesOpen} onOpenChange={setClamingesOpen} />
+      </header>
+      <GenreSlider />
+    </>
   );
 };

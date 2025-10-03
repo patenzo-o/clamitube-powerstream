@@ -94,9 +94,15 @@ export function VideoCard({
     if (isSponsored) return; // Can't subscribe to ads
     setSubscribed(!subscribed);
   };
+  const [showCaptions, setShowCaptions] = useState(false);
+
   return (
     <Card className="group gradient-card border-0 shadow-card hover:shadow-hover transition-smooth cursor-pointer overflow-hidden">
-      <div className="relative aspect-video bg-muted">
+      <div 
+        className="relative aspect-video bg-muted"
+        onMouseEnter={() => setShowCaptions(true)}
+        onMouseLeave={() => setShowCaptions(false)}
+      >
         {thumbnail ? (
           <img 
             src={thumbnail} 
@@ -106,6 +112,13 @@ export function VideoCard({
         ) : (
           <div className="w-full h-full gradient-hero flex items-center justify-center">
             <div className="text-6xl opacity-30">📚</div>
+          </div>
+        )}
+        
+        {/* Hover caption overlay */}
+        {showCaptions && (
+          <div className="absolute bottom-0 left-0 right-0 bg-black/90 text-white px-3 py-2 text-sm">
+            {title}
           </div>
         )}
         <div className="absolute bottom-2 right-2 flex gap-2">
