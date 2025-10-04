@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { Settings, Crown, Shield, User, GraduationCap, Moon, Sun, LogOut, UserCog, Languages } from "lucide-react";
+import { Settings, Crown, Shield, User, GraduationCap, Moon, Sun, LogOut, UserCog, Languages, Users as UsersIcon, MessageCircle, RotateCw, Volume2, VolumeX, Coins } from "lucide-react";
 
 interface SettingsDialogProps {
   open: boolean;
@@ -25,6 +25,8 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
   const [loading, setLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [language, setLanguage] = useState("en-US");
+  const [volume, setVolume] = useState(50);
+  const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
     const isDark = document.documentElement.classList.contains('dark');
@@ -268,6 +270,63 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
               <div className="text-sm text-muted-foreground">Claions</div>
             </div>
           </div>
+
+          <Separator />
+
+          {/* Volume Control */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium flex items-center gap-2">
+              {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+              Volume Control
+            </h3>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <span className="text-sm w-12">{isMuted ? "Muted" : volume}</span>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={isMuted ? 0 : volume}
+                  onChange={(e) => setVolume(parseInt(e.target.value))}
+                  className="flex-1"
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsMuted(!isMuted)}
+                >
+                  {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Additional Features */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium">Additional Features</h3>
+            <div className="grid grid-cols-2 gap-2">
+              <Button variant="outline" size="sm">
+                <UsersIcon className="h-4 w-4 mr-2" />
+                Account Switcher
+              </Button>
+              <Button variant="outline" size="sm">
+                <MessageCircle className="h-4 w-4 mr-2" />
+                Send Feedback
+              </Button>
+              <Button variant="outline" size="sm">
+                <RotateCw className="h-4 w-4 mr-2" />
+                Restart App
+              </Button>
+              <Button variant="outline" size="sm">
+                <Coins className="h-4 w-4 mr-2" />
+                Get 100 Free Claions
+              </Button>
+            </div>
+          </div>
+
+          <Separator />
 
           {/* Quick Actions */}
           <div className="space-y-2">

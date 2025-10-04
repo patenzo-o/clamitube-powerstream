@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Calendar, User, ThumbsUp, ThumbsDown, Bell, Tag, CheckCircle2, MessageSquare } from "lucide-react";
+import { Eye, Calendar, User, ThumbsUp, ThumbsDown, Bell, Tag, CheckCircle2, MessageSquare, Award, Trophy, Users as UsersIcon, Heart, Share2, Signal } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +12,7 @@ import {
 import { VideoCardMenu } from "./VideoCardMenu";
 import { RatingSystem } from "./RatingSystem";
 import { CommentsSection } from "./CommentsSection";
+import { ProfileViewDialog } from "./ProfileViewDialog";
 
 interface VideoCardProps {
   title: string;
@@ -31,6 +32,13 @@ interface VideoCardProps {
   hasYouTubeFeature?: boolean;
   videoId?: string;
   commentsCount?: number;
+  ratingCount?: number;
+  numericRating?: number;
+  awards?: string[];
+  leaderboardPosition?: number;
+  difficulty?: "Easy" | "Medium" | "Difficult";
+  topic?: string;
+  isLivestreaming?: boolean;
 }
 
 export function VideoCard({ 
@@ -51,6 +59,13 @@ export function VideoCard({
   hasYouTubeFeature = false,
   videoId = "1",
   commentsCount = 0,
+  ratingCount = 125,
+  numericRating = 4.5,
+  awards = [],
+  leaderboardPosition,
+  difficulty,
+  topic,
+  isLivestreaming = false,
 }: VideoCardProps) {
   const [showTags, setShowTags] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -59,6 +74,9 @@ export function VideoCard({
   const [disliked, setDisliked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
   const [dislikeCount, setDislikeCount] = useState(dislikes);
+  const [showProfile, setShowProfile] = useState(false);
+  const [showAwards, setShowAwards] = useState(false);
+  const [showFriends, setShowFriends] = useState(false);
 
   const handleLike = () => {
     if (isSponsored) return; // Ads can't be liked
@@ -128,8 +146,21 @@ export function VideoCard({
           <div className="bg-blue-600 text-white px-2 py-1 rounded text-sm font-medium">
             {quality}
           </div>
+          {difficulty && (
+            <div className={`text-white px-2 py-1 rounded text-sm font-medium ${
+              difficulty === "Easy" ? "bg-green-600" : 
+              difficulty === "Medium" ? "bg-yellow-600" : "bg-red-600"
+            }`}>
+              {difficulty}
+            </div>
+          )}
         </div>
         <div className="absolute top-2 left-2 flex gap-2 flex-wrap">
+          {isLivestreaming && (
+            <Badge className="bg-red-600 text-white px-3 py-1 text-xs font-bold animate-pulse border-0">
+              🔴 LIVE
+            </Badge>
+          )}
           {isNew && (
             <Badge className="bg-red-600 text-white px-3 py-1 text-xs font-bold animate-pulse border-0">
               NEW
@@ -159,11 +190,18 @@ export function VideoCard({
         </h3>
         
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
-          <User className="h-4 w-4" />
-          <span>{author}</span>
-          {isVerified && (
-            <CheckCircle2 className="h-4 w-4 text-blue-500 fill-blue-500" />
-          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowProfile(true)}
+            className="flex items-center gap-2 p-0 h-auto hover:text-primary"
+          >
+            <User className="h-4 w-4" />
+            <span>{author}</span>
+            {isVerified && (
+              <CheckCircle2 className="h-4 w-4 text-blue-500 fill-blue-500" />
+            )}
+          </Button>
         </div>
         
         <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
@@ -195,7 +233,13 @@ export function VideoCard({
         </div>
 
         <div className="mb-3">
-          <RatingSystem />
+          <div className="flex items-center gap-2 mb-2">
+            <RatingSystem />
+            <span className="text-sm text-muted-foreground">
+              ({ratingCount} ratings)
+            </span>
+            <Badge variant="secondary">{numericRating}/5</Badge>
+          </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2 mb-3">
@@ -258,6 +302,68 @@ export function VideoCard({
             <span className="text-xs">{commentsCount}</span>
           </Button>
 
+          {awards && awards.length > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowAwards(true)}
+              className="flex items-center gap-1"
+            >
+              <Award className="h-3 w-3" />
+              Awards
+            </Button>
+          )}
+
+          {leaderboardPosition && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-1"
+            >
+              <Trophy className="h-3 w-3" />
+              #{leaderboardPosition}
+            </Button>
+          )}
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowFriends(true)}
+            className="flex items-center gap-1"
+          >
+            <UsersIcon className="h-3 w-3" />
+            Friends
+          </Button>
+
+          {topic && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-1"
+            >
+              <Tag className="h-3 w-3" />
+              {topic}
+            </Button>
+          )}
+
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-1 text-pink-600"
+          >
+            <Heart className="h-3 w-3" />
+            Super Thanks
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-1"
+          >
+            <Share2 className="h-3 w-3" />
+            Share
+          </Button>
+
           <VideoCardMenu />
         </div>
 
@@ -286,6 +392,45 @@ export function VideoCard({
               <DialogTitle>Comments</DialogTitle>
             </DialogHeader>
             <CommentsSection videoId={videoId} />
+          </DialogContent>
+        </Dialog>
+
+        <ProfileViewDialog
+          open={showProfile}
+          onOpenChange={setShowProfile}
+          channelName={author}
+          isVerified={isVerified}
+        />
+
+        <Dialog open={showAwards} onOpenChange={setShowAwards}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Award className="h-5 w-5" />
+                Awards
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-2">
+              {awards?.map((award, index) => (
+                <Badge key={index} variant="secondary" className="mr-2">
+                  {award}
+                </Badge>
+              ))}
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={showFriends} onOpenChange={setShowFriends}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <UsersIcon className="h-5 w-5" />
+                Friends & Subscriptions
+              </DialogTitle>
+            </DialogHeader>
+            <p className="text-sm text-muted-foreground">
+              View channel subscriptions and collaborations
+            </p>
           </DialogContent>
         </Dialog>
       </CardContent>

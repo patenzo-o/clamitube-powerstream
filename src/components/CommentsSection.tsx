@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ThumbsUp, ThumbsDown, Trash2, Edit2, User as UserIcon } from "lucide-react";
+import { ThumbsUp, ThumbsDown, Trash2, Edit2, User as UserIcon, MessageCircle, Sparkles, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +21,10 @@ interface CommentsSectionProps {
 }
 
 export function CommentsSection({ videoId }: CommentsSectionProps) {
+  const [showGeminiTopics, setShowGeminiTopics] = useState(false);
+  const [showFirestorm, setShowFirestorm] = useState(false);
+  const geminiTopics = ["Key Concepts", "Important Dates", "Main Ideas", "Review Points"];
+  
   const [comments, setComments] = useState<Comment[]>([
     {
       id: "1",

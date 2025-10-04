@@ -17,7 +17,11 @@ import {
   ShoppingBag, 
   GraduationCap, 
   UserCheck,
-  Coins
+  Coins,
+  Ban,
+  DollarSign,
+  Eye,
+  MessageSquare
 } from "lucide-react";
 
 interface AdminPanelProps {
@@ -296,6 +300,168 @@ export const AdminPanel = ({ open, onOpenChange }: AdminPanelProps) => {
                   <CardContent>
                     <p className="text-sm text-muted-foreground">
                       Advanced lesson management tools coming soon.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* SAM - Student Account Management */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Coins className="h-5 w-5" />
+                      SAM - Student Account Management
+                    </CardTitle>
+                    <CardDescription>
+                      Give students claions and manage accounts
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <Button variant="outline" className="w-full">Give 100 Claions</Button>
+                    <Button variant="outline" className="w-full">Give 1,000 Claions</Button>
+                    <Button variant="outline" className="w-full">Give 1,000,000 Claions</Button>
+                  </CardContent>
+                </Card>
+
+                {/* SOM - Student Ownership Management */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserCheck className="h-5 w-5" />
+                      SOM - Student Ownership Management
+                    </CardTitle>
+                    <CardDescription>
+                      Change student positions and roles
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                      Use the Users tab to change roles.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* SPM - Student Permission Management */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Eye className="h-5 w-5" />
+                      SPM - Student Permission Management
+                    </CardTitle>
+                    <CardDescription>
+                      Restrict certain videos for students
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                      Video restriction controls coming soon.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* Banner (Owner Only) */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Ban className="h-5 w-5 text-red-600" />
+                      Banner - User Banning
+                    </CardTitle>
+                    <CardDescription>
+                      Ban users from the platform (Owner only)
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                      Ban visitors, students, teachers, or admins permanently or temporarily.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* Purchasing Editor */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <DollarSign className="h-5 w-5" />
+                      Purchasing Editor
+                    </CardTitle>
+                    <CardDescription>
+                      Edit shop prices and products
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                      Manage shop items and pricing.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* Personal Viewer */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Eye className="h-5 w-5" />
+                      Personal Viewer
+                    </CardTitle>
+                    <CardDescription>
+                      View user profiles (Owner only)
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                      Access student, teacher, and admin profiles.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* Channel Banner */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Ban className="h-5 w-5" />
+                      Channel Banner
+                    </CardTitle>
+                    <CardDescription>
+                      Ban channels from the app
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                      Remove inappropriate channels.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* Restriction Editor */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Settings className="h-5 w-5" />
+                      Restriction Editor
+                    </CardTitle>
+                    <CardDescription>
+                      Set student actions over channels
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                      Control student access to specific channels.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* Commenting Restrictions Editor */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <MessageSquare className="h-5 w-5" />
+                      Commenting Restrictions Editor
+                    </CardTitle>
+                    <CardDescription>
+                      Restrict certain words from comments
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                      Manage comment word filters.
                     </p>
                   </CardContent>
                 </Card>
