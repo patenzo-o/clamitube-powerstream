@@ -2,6 +2,10 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useRef } from "react";
 
+interface GenreSliderProps {
+  onGenreSelect?: (genre: string) => void;
+}
+
 const genres = [
   "All",
   "Mathematics",
@@ -15,9 +19,14 @@ const genres = [
   "Social Studies",
 ];
 
-export function GenreSlider() {
+export function GenreSlider({ onGenreSelect }: GenreSliderProps = {}) {
   const [selectedGenre, setSelectedGenre] = useState("All");
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleGenreSelect = (genre: string) => {
+    setSelectedGenre(genre);
+    onGenreSelect?.(genre);
+  };
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
@@ -51,7 +60,7 @@ export function GenreSlider() {
               <Button
                 key={genre}
                 variant={selectedGenre === genre ? "default" : "outline"}
-                onClick={() => setSelectedGenre(genre)}
+                onClick={() => handleGenreSelect(genre)}
                 className="whitespace-nowrap shrink-0"
                 size="sm"
               >
