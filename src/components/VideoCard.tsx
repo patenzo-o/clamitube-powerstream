@@ -39,6 +39,8 @@ interface VideoCardProps {
   difficulty?: "Easy" | "Medium" | "Difficult";
   topic?: string;
   isLivestreaming?: boolean;
+  isFree?: boolean;
+  loves?: number;
 }
 
 export function VideoCard({ 
@@ -66,6 +68,8 @@ export function VideoCard({
   difficulty,
   topic,
   isLivestreaming = false,
+  isFree = false,
+  loves = 0,
 }: VideoCardProps) {
   const [showTags, setShowTags] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -77,6 +81,8 @@ export function VideoCard({
   const [showProfile, setShowProfile] = useState(false);
   const [showAwards, setShowAwards] = useState(false);
   const [showFriends, setShowFriends] = useState(false);
+  const [loved, setLoved] = useState(false);
+  const [loveCount, setLoveCount] = useState(loves);
 
   const handleLike = () => {
     if (isSponsored) return; // Ads can't be liked
@@ -112,6 +118,17 @@ export function VideoCard({
     if (isSponsored) return; // Can't subscribe to ads
     setSubscribed(!subscribed);
   };
+  
+  const handleLove = () => {
+    if (loved) {
+      setLoved(false);
+      setLoveCount(loveCount - 1);
+    } else {
+      setLoved(true);
+      setLoveCount(loveCount + 1);
+    }
+  };
+  
   const [showCaptions, setShowCaptions] = useState(false);
 
   return (
@@ -230,6 +247,11 @@ export function VideoCard({
               +{tags.length - 3}
             </Badge>
           )}
+          {isFree && (
+            <Badge className="text-xs bg-green-500/20 text-green-700 border-green-500">
+              FREE
+            </Badge>
+          )}
         </div>
 
         <div className="mb-3">
@@ -267,29 +289,43 @@ export function VideoCard({
           )}
 
           {!isSponsored && (
-            <div className="flex items-center gap-1">
-              <Button
-                variant={liked ? "default" : "outline"}
-                size="sm"
-                onClick={handleLike}
-                className="flex items-center gap-1"
-                disabled={isSponsored}
-              >
-                <ThumbsUp className="h-3 w-3" />
-                <span className="text-xs">{likeCount}</span>
-              </Button>
+            <>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant={liked ? "default" : "outline"}
+                  size="sm"
+                  onClick={handleLike}
+                  className="flex items-center gap-1"
+                  disabled={isSponsored}
+                >
+                  <ThumbsUp className="h-3 w-3" />
+                  <span className="text-xs">{likeCount}</span>
+                </Button>
+
+                <Button
+                  variant={disliked ? "default" : "outline"}
+                  size="sm"
+                  onClick={handleDislike}
+                  className="flex items-center gap-1"
+                  disabled={isSponsored}
+                >
+                  <ThumbsDown className="h-3 w-3" />
+                  <span className="text-xs">{dislikeCount}</span>
+                </Button>
+              </div>
+
+              <div className="h-4 w-px bg-border" />
 
               <Button
-                variant={disliked ? "default" : "outline"}
+                variant={loved ? "default" : "outline"}
                 size="sm"
-                onClick={handleDislike}
-                className="flex items-center gap-1"
-                disabled={isSponsored}
+                onClick={handleLove}
+                className={`flex items-center gap-1 ${loved ? 'text-red-500' : ''}`}
               >
-                <ThumbsDown className="h-3 w-3" />
-                <span className="text-xs">{dislikeCount}</span>
+                <Heart className={`h-3 w-3 ${loved ? 'fill-current' : ''}`} />
+                <span className="text-xs">{loveCount}</span>
               </Button>
-            </div>
+            </>
           )}
 
           <Button

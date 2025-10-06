@@ -2,9 +2,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { PlayCircle, FastForward, Calendar as CalendarIcon } from "lucide-react";
+import { PlayCircle, FastForward, Calendar as CalendarIcon, EyeOff, Flag, SkipForward } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
 interface ClamaideosDialogProps {
   open: boolean;
@@ -64,9 +65,27 @@ export function ClamaideosDialog({ open, onOpenChange }: ClamaideosDialogProps) 
                         <PlayCircle className="h-4 w-4 mr-2" />
                         Watch
                       </Button>
-                      <Button size="sm" variant="outline">
-                        <FastForward className="h-4 w-4 mr-2" />
-                        Skip ({video.claionsToSkip} ₡)
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => toast.success('Video hidden')}
+                      >
+                        <EyeOff className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => toast.success('Video reported')}
+                      >
+                        <Flag className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => toast.success('Skipped claint')}
+                      >
+                        <SkipForward className="h-4 w-4 mr-2" />
+                        Skip
                       </Button>
                     </div>
                   </div>
